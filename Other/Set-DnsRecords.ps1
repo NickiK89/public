@@ -5,9 +5,9 @@
 [CmdletBinding()]
 param(
     # Mandatory parameters
-
     [Parameter(Mandatory)]
-    [string]$FilePath,
+    [System.IO.FileInfo]$FilePath,
+    [Parameter(Mandatory)]
     [string]$ServerName
 )
 
@@ -15,16 +15,17 @@ param(
 $DomainName = $env:USERDNSDOMAIN
 
 function Set-DnsRecords {
-    param(
-        [Parameter()]
-        [string]$FilePath
-    )
-    
-    $Records = Import-Csv $FilePath
-
+    $Records = Import-Csv -Path $FilePath -Delimiter ";"
     # Check if record already exists
     foreach ($record in $Records) {
-        Resolve-DnsName -Name $record -Type A -Server $ServerName -DnsOnly
+        try {
+            Resolve-DnsName -Name $record.Name -Type A -Server $ServerName -ErrorAction Stop | Out-Null
+            Write-Host $record.Name "already found on the specified DNS server" -ForegroundColor Green
+        }
+        catch [System.ComponentModel.Win32Exception] {
+            Write-Host $record.Name "not found" -ForegroundColor Red
+            Add-DnsServerResourceRecordA -ComputerName $ServerName -Name $record.Name -ZoneName $DomainName -IPv4Address $record.IP
+        }
     }    
-    Add-DnsServerResourceRecordA
 }
+Set-DnsRecords
