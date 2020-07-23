@@ -23,8 +23,13 @@ function Set-DnsRecords {
             Write-Host $record.Name "already found on the specified DNS server" -ForegroundColor Green
         }
         catch [System.ComponentModel.Win32Exception] {
-            Write-Host $record.Name "not found" -ForegroundColor Red
-            Add-DnsServerResourceRecordA -ComputerName $ServerName -Name $record.Name -ZoneName $DomainName -IPv4Address $record.IP
+            try {
+                Add-DnsServerResourceRecordA -ComputerName $ServerName -Name $record.Name -ZoneName $DomainName -IPv4Address $record.IP -ErrorAction Stop
+            }
+            catch [Microsoft.Management.Infrastructure.CimException] {
+                Write-Warning -Message "Permission denied"
+            }
+            Write-Host $record.Name "added to the specified DNS server" -ForegroundColor Green
         }
     }    
 }
