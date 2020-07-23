@@ -29,7 +29,7 @@ function Set-DnsRecords {
             catch [Microsoft.Management.Infrastructure.CimException] {
                 Write-Warning -Message "Permission denied"
             }
-            Write-Host $record.Name "added to the specified DNS server" -ForegroundColor Green
+            Write-Host $record.Name "added to the specified DNS server" -ForegroundColor Yellow
         }
     }    
 }
