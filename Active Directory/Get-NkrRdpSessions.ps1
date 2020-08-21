@@ -4,7 +4,6 @@
 [CmdletBinding()]
 param(
     # Mandatory parameters
-
     [Parameter(Mandatory)]
     [string]$ServerName
 )
@@ -14,6 +13,9 @@ function Get-NkrRdpSessions {
         [Parameter()]
         [string]$ServerName
     )
+    
+    $ServerName = 'NKDSADM'
+
     # Edit AllowRemoteRPC registry value to 1
     $AllowRemoteRPC = Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name AllowRemoteRPC
     if ($AllowRemoteRPC.AllowRemoteRPC -eq '0') {
@@ -27,6 +29,7 @@ function Get-NkrRdpSessions {
         }
         Write-Output "Successfully edited registry value"
 
-
+        $queryResults = (qwinsta.exe /server:$ServerName | ForEach-Object {(($_.trim() -replace "s+",","))} | ConvertFrom-Csv)
+        $queryResults
     }
 }
