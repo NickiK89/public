@@ -1,6 +1,7 @@
 # LACP
 
 LACP (802.3ad) allows interfaces to be bundled for improved throughput or redundancy.
+
 Up to 16 interfaces can be bundled together, however only 8 can be active at the same time.
 
 ## Configuring LACP
