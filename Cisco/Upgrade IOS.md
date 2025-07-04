@@ -13,7 +13,7 @@ The file is located on a PC with TFTPD64 running, using the IP address 192.168.1
 5. `Switch(config-if)#ip add 192.168.1.100 255.255.255.0`
 6. `Switch#delete /recursive /force flash:c2960-lanlitek9-mz.150-2.SE8`
 7. `Switch#archive tar /xtract tftp://192.168.1.10/c2960-lanbasek9-tar.152-7.E12.tar flash:`
-8. `Switch#verify flash:c2960-lanbasek9-tar.152-7.E12/c2960-lanbasek9-tar.152-7.E12.bin`
-9. `Switch#boot system flash:/c2960-lanbasek9-tar.152-7.E12/c2960-lanbasek9-tar.152-7.E12.bin`
+8. `Switch#configure terminal`
+9. `Switch(config)#boot system flash:/c2960-lanbasek9-tar.152-7.E12/c2960-lanbasek9-tar.152-7.E12.bin`
 10. `Switch#write memory`
 11. `Switch#reload now`
